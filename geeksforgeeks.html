@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Developer Journey</title>
+    <style>
+        body { background-color: #0a0a12; color: #e0e0e0; font-family: 'Courier New', Courier, monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0; height: 100vh; overflow: hidden; }
+        h1 { color: #00ffcc; text-shadow: 0 0 10px rgba(0, 255, 204, 0.5); }
+        #game-world { width: 900px; height: 550px; background: #111; border: 4px solid #333; position: relative; margin: 10px auto; border-radius: 8px; }
+        #player { width: 40px; height: 40px; background: #ff4b2b; position: absolute; left: 420px; top: 250px; border-radius: 4px; box-shadow: 0 0 10px #ff4b2b; z-index: 10; }
+        .project-zone { width: 120px; height: 120px; position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #444; background: #1a1a2e; border-radius: 8px; cursor: pointer; color: #888; font-weight: bold; }
+        .active-zone { border-color: #00ffcc; color: #00ffcc; box-shadow: 0 0 15px rgba(0, 255, 204, 0.3); }
+        #msg { color: #ff4b2b; font-size: 18px; font-weight: bold; margin-bottom: 10px; height: 20px; }
+        
+        /* Modal Styles */
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 100; }
+        #modal-content { background: #1a1a2e; padding: 40px; border: 2px solid #00ffcc; border-radius: 12px; text-align: center; width: 500px; }
+        .modal-btn { padding: 10px 20px; margin: 10px; background: #00ffcc; border: none; cursor: pointer; text-decoration: none; color: black; font-weight: bold; border-radius: 4px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <h1>The Developer's Path</h1>
+    <div id="msg">Use Arrow Keys to move. Press SPACE to interact!</div>
+    
+    <div id="game-world">
+        <div id="player"></div>
+        <div class="project-zone" id="p1" style="left: 50px; top: 50px;"><span>Project 1</span></div>
+        <div class="project-zone" id="p2" style="left: 350px; top: 200px;"><span>Game Portfolio</span></div>
+        <div class="project-zone" id="p3" style="left: 700px; top: 380px;"><span>Backend API</span></div>
+    </div>
+
+    <div id="modal-overlay">
+        <div id="modal-content">
+            <h2 id="modal-title">Project Title</h2>
+            <p id="modal-desc">Description here...</p>
+            <a href="#" id="live-link" class="modal-btn" target="_blank">Live Demo</a>
+            <a href="#" id="repo-link" class="modal-btn" target="_blank">GitHub Repo</a>
+            <button onclick="closeModal()" class="modal-btn" style="background:#ff4b2b">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const projects = {
+            'p1': { title: "Project 1", desc: "My first web project.", live: "https://google.com", repo: "https://github.com" },
+            'p2': { title: "Game Portfolio", desc: "This interactive game portfolio.", live: "https://google.com", repo: "https://github.com" },
+            'p3': { title: "Backend API", desc: "Node.js based API project.", live: "https://google.com", repo: "https://github.com" }
+        };
+
+        const player = document.getElementById('player');
+        let x = 420, y = 250;
+        const keys = {};
+
+        document.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            if(e.code === 'Space') checkInteraction(true);
+        });
+        document.addEventListener('keyup', (e) => keys[e.code] = false);
+
+        function gameLoop() {
+            if (keys['ArrowUp'] && y > 0) y -= 6;
+            if (keys['ArrowDown'] && y < 510) y += 6;
+            if (keys['ArrowLeft'] && x > 0) x -= 6;
+            if (keys['ArrowRight'] && x < 860) x += 6;
+            player.style.left = x + 'px'; player.style.top = y + 'px';
+            checkInteraction(false);
+            requestAnimationFrame(gameLoop);
+        }
+
+        function checkInteraction(trigger) {
+            const pl = player.getBoundingClientRect();
+            document.querySelectorAll('.project-zone').forEach(zone => {
+                const z = zone.getBoundingClientRect();
+                if (pl.left < z.right && pl.right > z.left && pl.top < z.bottom && pl.bottom > z.top) {
+                    zone.classList.add('active-zone');
+                    if(trigger) openModal(zone.id);
+                } else { zone.classList.remove('active-zone'); }
+            });
+        }
+
+        function openModal(id) {
+            document.getElementById('modal-title').innerText = projects[id].title;
+            document.getElementById('modal-desc').innerText = projects[id].desc;
+            document.getElementById('live-link').href = projects[id].live;
+            document.getElementById('repo-link').href = projects[id].repo;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+        gameLoop();
+    </script>
+</body>
+</html>
