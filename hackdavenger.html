@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HeatBridge | Waste Heat Reuse</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f7f4;
+  color: #172b24;
+  line-height: 1.6;
+}
+
+:root {
+  --dark: #102a20;
+  --green: #299b70;
+  --orange: #f47735;
+  --blue: #3186d8;
+  --light: #f4f7f4;
+  --white: #ffffff;
+  --muted: #718078;
+  --border: #dce7df;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* NAVBAR */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-height: 72px;
+  padding: 15px 6%;
+  display: flex;
+  align-items: center;
+  background: rgba(244, 247, 244, 0.97);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.logo span {
+  color: var(--orange);
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  color: var(--orange);
+}
+
+.nav-button,
+.primary-button {
+  border: none;
+  border-radius: 9px;
+  background: var(--dark);
+  color: white;
+  padding: 12px 18px;
+  font-weight: bold;
+}
+
+.nav-button {
+  margin-left: 25px;
+}
+
+.secondary-button {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: white;
+  color: var(--dark);
+  padding: 12px 18px;
+  font-weight: bold;
+}
+
+.menu-button {
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 25px;
+}
+
+/* GENERAL */
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.section {
+  padding: 75px 0;
+}
+
+.section-heading {
+  margin-bottom: 30px;
+}
+
+.section-heading h2 {
+  font-size: 40px;
+  line-height: 1.2;
+  margin: 8px 0;
+}
+
+.section-heading p {
+  color: var(--muted);
+}
+
+.tag {
+  color: var(--orange);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+/* HERO */
+
+.hero {
+  min-height: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 50px;
+}
+
+.eyebrow {
+  color: var(--orange);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+.hero h1 {
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1;
+  letter-spacing: -2px;
+  margin: 20px 0;
+}
+
+.hero h1 span {
+  color: var(--orange);
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.hero-note {
+  margin-top: 18px;
+  font-size: 12px !important;
+}
+
+/* NETWORK CARD */
+
+.network-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 25px;
+  box-shadow: 0 15px 40px rgba(16, 42, 32, 0.08);
+}
+
+.network-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--muted);
+}
+
+.live {
+  color: var(--green);
+}
+
+.network {
+  height: 300px;
+  position: relative;
+  margin-top: 20px;
+  background: #f4f8f5;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.network svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.network path {
+  fill: none;
+  stroke: #b9d4c6;
+  stroke-width: 2;
+  stroke-dasharray: 6 7;
+}
+
+.node {
+  position: absolute;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+  font-size: 12px;
+}
+
+.node strong {
+  display: block;
+}
+
+.node small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.source-node {
+  border-left: 4px solid var(--orange);
+}
+
+.demand-node {
+  border-left: 4px solid var(--blue);
+}
+
+.node-one {
+  left: 10px;
+  top: 35px;
+}
+
+.node-two {
+  right: 10px;
+  top: 75px;
+}
+
+.node-three {
+  left: 35px;
+  bottom: 25px;
+}
+
+.node-four {
+  right: 15px;
+  bottom: 30px;
+}
+
+.network-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 15px;
+}
+
+.network-stats strong {
+  display: block;
+  font-size: 21px;
+}
+
+.network-stats small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* STATS */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 50px;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 30px;
+}
+
+.stat-card span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* FORMS */
+
+.form-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.04);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--green);
+}
+
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.form-submit {
+  margin-top: 20px;
+}
+
+/* RECORDS */
+
+.records {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.record-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.record-card h3 {
+  margin-bottom: 10px;
+}
+
+.record-card p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 5px 0;
+}
+
+.record-card strong {
+  color: var(--dark);
+}
+
+.card-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.delete-button {
+  background: #fff0ed;
+  color: #c4432e;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12px;
+}
+
+/* MATCHES */
+
+.matches-section {
+  background: #eaf2ed;
+}
+
+.match-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.match-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.match-top h3 {
+  margin-bottom: 5px;
+}
+
+.status {
+  display: inline-block;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.status.good {
+  color: #146b45;
+  background: #d9f4e6;
+}
+
+.status.review {
+  color: #93600a;
+  background: #fff0c9;
+}
+
+.match-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.detail-box {
+  background: #f5f8f5;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.detail-box small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.detail-box strong {
+  font-size: 14px;
+}
+
+.match-description {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 15px;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 35px;
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: 15px;
+  color: var(--muted);
+}
+
+/* ABOUT */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.about-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.about-card h3 {
+  margin-bottom: 12px;
+}
+
+.about-card p,
+.about-card li {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.about-card ul {
+  padding-left: 20px;
+}
+
+/* FOOTER */
+
+footer {
+  background: var(--dark);
+  color: white;
+  text-align: center;
+  padding: 30px 15px;
+}
+
+footer p {
+  color: #b7c9bf;
+  font-size: 13px;
+}
+
+/* TOAST */
+
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--dark);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  display: none;
+  z-index: 2000;
+  box-shadow: 0 5px 20px rgba(0,0,0,.2);
+}
+
+/* MODAL */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(0,0,0,.55);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 18px;
+  padding: 28px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.close-modal {
+  border: none;
+  background: #f2f4f2;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 40px 0;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-grid,
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .records {
+    grid-template-columns: 1fr;
+  }
+
+  .match-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width: 700px) {
+  .navbar {
+    padding: 15px 5%;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-button {
+    display: none;
+  }
+
+  .menu-button {
+    display: block;
+  }
+
+  .section {
+    padding: 55px 0;
+  }
+
+  .section-heading h2 {
+    font-size: 32px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .network-stats {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-full {
+    grid-column: auto;
+  }
+
+  .match-details {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media(max-width: 450px) {
+  .hero h1 {
+    font-size: 45px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons button {
+    width: 100%;
+  }
+
+  .network {
+    height: 270px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+  <div class="logo">
+    <span>♨</span> Heat<span>Bridge</span>
+  </div>
+
+  <div class="nav-links" id="navLinks">
+    <a href="#home" onclick="closeMenu()">Home</a>
+    <a href="#sources" onclick="closeMenu()">Heat Sources</a>
+    <a href="#demands" onclick="closeMenu()">Heat Demand</a>
+    <a href="#matches" onclick="closeMenu()">Matches</a>
+    <a href="#about" onclick="closeMenu()">About</a>
+  </div>
+
+  <button class="nav-button" onclick="scrollToSection('sources')">
+    Add Source
+  </button>
+
+  <button class="menu-button" onclick="toggleMenu()">☰</button>
+</nav>
+
+
+<!-- HOME -->
+
+<section class="section" id="home">
+  <div class="container hero">
+
+    <div>
+      <div class="eyebrow">INDUSTRIAL HEAT REUSE PLATFORM</div>
+
+      <h1>
+        Turn Waste Heat<br>
+        Into <span>Opportunity.</span>
+      </h1>
+
+      <p>
+        HeatBridge helps industries discover potential opportunities
+        to reuse waste heat by comparing heat sources and heat demands.
+      </p>
+
+      <div class="hero-buttons">
+        <button class="primary-button"
+          onclick="scrollToSection('sources')">
+          Register Heat Source
+        </button>
+
+        <button class="secondary-button"
+          onclick="scrollToSection('demands')">
+          Add Heat Demand
+        </button>
+      </div>
+
+      <p class="hero-note">
+        Concept MVP • Local browser storage • Rule-based matching
+      </p>
+    </div>
+
+
+    <div class="network-card">
+      <div class="network-header">
+        <span>LIVE OPPORTUNITY MAP</span>
+        <span class="live">● DEMO</span>
+      </div>
+
+      <div class="network">
+
+        <svg viewBox="0 0 400 300">
+          <path d="M90 80 C180 30 220 100 310 115"></path>
+          <path d="M90 80 C120 180 220 210 310 115"></path>
+          <path d="M80 245 C170 180 240 210 310 115"></path>
+        </svg>
+
+        <div class="node source-node node-one">
+          <strong>Factory A</strong>
+          <small>Waste Heat</small>
+        </div>
+
+        <div class="node demand-node node-two">
+          <strong>Plant B</strong>
+          <small>Heat Demand</small>
+        </div>
+
+        <div class="node source-node node-three">
+          <strong>Factory C</strong>
+          <small>Steam Source</small>
+        </div>
+
+        <div class="node demand-node node-four">
+          <strong>Plant D</strong>
+          <small>Process Heating</small>
+        </div>
+      </div>
+
+      <div class="network-stats">
+        <div>
+          <strong id="networkSources">0</strong>
+          <small>Sources</small>
+        </div>
+
+        <div>
+          <strong id="networkDemands">0</strong>
+          <small>Demands</small>
+        </div>
+
+        <div>
+          <strong id="networkMatches">0</strong>
+          <small>Matches</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- STATS -->
+
+<section class="container">
+  <div class="stats">
+
+    <div class="stat-card">
+      <strong id="sourceCount">0</strong>
+      <span>Registered Sources</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="demandCount">0</strong>
+      <span>Heat Demands</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="matchCount">0</strong>
+      <span>Potential Matches</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="capacityCount">0</strong>
+      <span>Total Capacity kW</span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- HEAT SOURCES -->
+
+<section class="section" id="sources">
+  <div class="container">
+
+    <div class="section-heading">
+      <div class="tag">01 / HEAT SOURCES</div>
+      <h2>Register Waste Heat</h2>
+      <p>
+        Add information about available waste heat from an industrial source.
+      </p>
+    </div>
+
+    <div class="form-card">
+
+      <form id="sourceForm">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Source Name</label>
+            <input
+              type="text"
+              id="sourceName"
+              placeholder="Example: Factory A"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Industry Type</label>
+            <select id="sourceIndustry" required>
+              <option value="">Select Industry</option>
+              <option>Steel</option>
+              <option>Cement</option>
+              <option>Textile</option>
+              <option>Food Processing</option>
+              <option>Chemical</option>
+              <option>Power Plant</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Temperature °C</label>
+            <input
+              type="number"
+              id="sourceTemperature"
+              min="1"
+              placeholder="Example: 180"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Available Capacity kW</label>
+            <input
+              type="number"
+              id="sourceCapacity"
+              min="1"
+              placeholder="Example: 500"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Operating Hours per Day</label>
+            <input
+              type="number"
+              id="sourceHours"
+              min="1"
+              max="24"
+              placeholder="Example: 12"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Location</label>
+            <input
+              type="text"
+              id="sourceLocation"
+              placeholder="Example: Ghaziabad"
+              required>
+          </div>
+
+        </div>
+
+        <button class="primary-button form-submit" type="submit">
+          Add Heat Source
+        </button>
+
+      </form>
+    </div>
+
+    <div class="records" id="sourceRecords"></div>
+
+  </div>
+</section>
+
+
+<!-- HEAT DEMAND -->
+
+<section class="section" id="demands">
+  <div class="container">
+
+    <div class="section-heading">
+      <div class="tag">02 / HEAT DEMAND</div>
+      <h2>Register Heat Demand</h2>
+      <p>
+        Add information about a process or plant that needs heat.
+      </p>
+    </div>
+
+    <div class="form-card">
+
+      <form id="demandForm">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Demand Name</label>
+            <input
+              type="text"
+              id="demandName"
+              placeholder="Example: Plant B"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Industry Type</label>
+            <select id="demandIndustry" required>
+              <option value="">Select Industry</option>
+              <option>Steel</option>
+              <option>Cement</option>
+              <option>Textile</option>
+              <option>Food Processing</option>
+              <option>Chemical</option>
+              <option>Power Plant</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Required Temperature °C</label>
+            <input
+              type="number"
+              id="demandTemperature"
+              min="1"
+              placeholder="Example: 120"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Required Capacity kW</label>
+            <input
+              type="number"
+              id="demandCapacity"
+              min="1"
+              placeholder="Example: 300"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Operating Hours per Day</label>
+            <input
+              type="number"
+              id="demandHours"
+              min="1"
+              max="24"
+              placeholder="Example: 10"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>Location</label>
+            <input
+              type="text"
+              id="demandLocation"
+              placeholder="Example: Ghaziabad"
+              required>
+          </div>
+
+        </div>
+
+        <button class="primary-button form-submit" type="submit">
+          Add Heat Demand
+        </button>
+
+      </form>
+    </div>
+
+    <div class="records" id="demandRecords"></div>
+
+  </div>
+</section>
+
+
+<!-- MATCHES -->
+
+<section class="section matches-section" id="matches">
+  <div class="container">
+
+    <div class="section-heading">
+      <div class="tag">03 / SMART MATCHING</div>
+      <h2>Potential Heat Matches</h2>
+      <p>
+        The system compares temperature, capacity, working hours and location.
+      </p>
+    </div>
+
+    <div id="matchRecords"></div>
+
+  </div>
+</section>
+
+
+<!-- ABOUT -->
+
+<section class="section" id="about">
+  <div class="container">
+
+    <div class="section-heading">
+      <div class="tag">04 / ABOUT PROJECT</div>
+      <h2>About HeatBridge</h2>
+      <p>
+        A concept platform for identifying possible industrial waste heat
+        reuse opportunities.
+      </p>
+    </div>
+
+    <div class="about-grid">
+
+      <div class="about-card">
+        <h3>Problem</h3>
+        <p>
+          Industries often release excess heat into the environment.
+          Nearby industries may need heat, but information about available
+          heat and demand is not always connected.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <h3>Our Solution</h3>
+        <p>
+          HeatBridge provides a simple interface to register heat sources
+          and heat demands, then generates possible matches using basic
+          feasibility rules.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <h3>Matching Parameters</h3>
+        <ul>
+          <li>Temperature compatibility</li>
+          <li>Available and required capacity</li>
+          <li>Operating hours</li>
+          <li>Location similarity</li>
+        </ul>
+      </div>
+
+      <div class="about-card">
+        <h3>Technology Used</h3>
+        <ul>
+          <li>HTML</li>
+          <li>CSS</li>
+          <li>JavaScript</li>
+          <li>LocalStorage</li>
+          <li>Rule-based matching</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+
+<
